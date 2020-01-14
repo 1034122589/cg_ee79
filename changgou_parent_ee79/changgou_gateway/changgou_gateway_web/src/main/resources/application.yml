@@ -35,22 +35,25 @@ spring:
                 redis-rate-limiter.replenishRate: 1
                 # 是指令牌桶的容量，允许在一秒钟内完成的最大请求数,将此值设置为零将阻止所有请求。
                 redis-rate-limiter.burstCapacity: 2
-        - id: changgou_user_route  #路由唯一标识-user
-          uri: lb://user # 发送给注册服务名字为goods的服务器
-          # 路由断言：路由拦截规则
+        - id: changgou_user_route
+          uri: lb://user
           predicates:
             - Path=/api/user/**,/api/address/**,/api/areas/**,/api/cities/**,/api/provinces/**
           filters:
-            - StripPrefix=1  # 去除路径前缀过滤器，一个"/"识别为一个路径
-        - id: changgou_order_route  #路由唯一标识-user
-          uri: lb://order # 发送给注册服务名字为goods的服务器
-          # 路由断言：路由拦截规则
+            - StripPrefix=1
+        - id: changgou_order_route
+          uri: lb://order
           predicates:
             - Path=/api/cart/**,/api/categoryReport/**,/api/orderConfig/**,/api/order/**,/api/orderItem/**,/api/orderLog/**,/api/preferential/**,/api/returnCause/**,/api/returnOrder/**,/api/returnOrderItem/**
           filters:
-            - StripPrefix=1  # 去除路径前缀过滤器，一个"/"识别为一个路径
+            - StripPrefix=1
+
+        - id: changgou_web_nginx_route
+          uri: lb://web-nginx
+          predicates:
+            - Path=/**
   redis:
-    host: 192.168.211.132
+    host: 192.168.45.52
 
 server:
   port: 8001

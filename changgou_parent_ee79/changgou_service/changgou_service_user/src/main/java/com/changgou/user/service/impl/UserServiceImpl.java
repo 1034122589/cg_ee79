@@ -5,11 +5,15 @@ import com.changgou.user.pojo.User;
 import com.changgou.user.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import entity.Result;
+import entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /****
@@ -212,5 +216,84 @@ public class UserServiceImpl implements UserService {
     @Override
     public int addUserPoints(String username, Integer pint) {
         return userMapper.addUserPoints(username,pint);
+    }
+
+    /**
+     * 根据昵称查询用户
+     *
+     * @param username
+     * @param nickName
+     * @return
+     */
+    @Override
+    public User findByNickName(String username, String nickName) {
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andNotEqualTo("username", username);
+        criteria.andEqualTo("nickName", nickName);
+        return userMapper.selectOneByExample(example);
+
+    }
+
+    /**
+     * 修改用户
+     */
+    @Override
+    public void UpdateUser(User user) {
+        user.setUpdated(LocalDateTime.now());
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    /**
+     * 用户密码重置
+     *
+     * @param user
+     */
+    @Override
+    public Result resetPassword(User user) {
+        User tempUser = new User();
+        tempUser.setUsername(user.getUsername());
+        User u = userMapper.selectOne(tempUser);
+        if (u == null) {
+            return new Result(false, StatusCode.ERROR, "用户不存在");
+        }
+        tempUser.setPhone(user.getPhone());
+        User dbUser = userMapper.selectOne(tempUser);
+        if (dbUser == null) {
+            return new Result(false, StatusCode.ERROR, "此手机号未注册");
+        }
+        // 密码加密
+        String password = user.getPassword();
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encode = bCryptPasswordEncoder.encode(password);
+        user.setPassword(encode);
+        user.setUpdated(LocalDateTime.now());
+        // 更新用户信息
+        userMapper.updateByPrimaryKeySelective(user);
+        return new Result(true, StatusCode.ERROR, "密码重置成功");
+
+
+    }
+
+    /**
+     * 用户登录状态密码重置
+     *
+     * @param user
+     */
+    @Override
+    public void resetPasswordLogin(User user) {
+        String password = user.getPassword();
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encode = bCryptPasswordEncoder.encode(password);
+        user.setPassword(encode);
+        user.setUpdated(LocalDateTime.now());
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public User findByName(String username) {
+        User user = new User();
+        user.setUsername(username);
+        return userMapper.selectOne(user);
     }
 }

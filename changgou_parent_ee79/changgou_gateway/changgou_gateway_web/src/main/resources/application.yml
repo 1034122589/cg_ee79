@@ -35,25 +35,36 @@ spring:
                 redis-rate-limiter.replenishRate: 1
                 # 是指令牌桶的容量，允许在一秒钟内完成的最大请求数,将此值设置为零将阻止所有请求。
                 redis-rate-limiter.burstCapacity: 2
-        - id: changgou_user_route
-          uri: lb://user
+        - id: changgou_user_route  #路由唯一标识-user
+          uri: lb://user # 发送给注册服务名字为goods的服务器
+          # 路由断言：路由拦截规则
           predicates:
             - Path=/api/user/**,/api/address/**,/api/areas/**,/api/cities/**,/api/provinces/**
           filters:
-            - StripPrefix=1
-        - id: changgou_order_route
-          uri: lb://order
+            - StripPrefix=1  # 去除路径前缀过滤器，一个"/"识别为一个路径
+        - id: changgou_order_route  #路由唯一标识-user
+          uri: lb://order # 发送给注册服务名字为goods的服务器
+          # 路由断言：路由拦截规则
           predicates:
             - Path=/api/cart/**,/api/categoryReport/**,/api/orderConfig/**,/api/order/**,/api/orderItem/**,/api/orderLog/**,/api/preferential/**,/api/returnCause/**,/api/returnOrder/**,/api/returnOrderItem/**
           filters:
-            - StripPrefix=1
-
-        - id: changgou_web_nginx_route
-          uri: lb://web-nginx
+            - StripPrefix=1  # 去除路径前缀过滤器，一个"/"识别为一个路径
+        #文件上传微服务
+        - id: changgou_file_route
+          uri: lb://file
           predicates:
-            - Path=/**
+            - Path=/api/upload
+          filters:
+            - StripPrefix=1
+        #认证微服务
+        - id: changgou_user-auth_route
+          uri: lb://user-auth
+          predicates:
+            - Path=/api/oauth/login,/api/my/**
+          filters:
+            - StripPrefix=1
   redis:
-    host: 192.168.45.52
+    host: 192.168.211.132
 
 server:
   port: 8001
@@ -63,3 +74,11 @@ eureka:
       defaultZone: http://127.0.0.1:7001/eureka
   instance:
     prefer-ip-address: true
+management:
+  endpoint:
+    gateway:
+      enabled: true
+    web:
+      exposure:
+        include: true
+

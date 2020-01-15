@@ -2,6 +2,7 @@ package com.changgou.user.service;
 
 import com.changgou.user.pojo.User;
 import com.github.pagehelper.PageInfo;
+import entity.Result;
 
 import java.util.List;
 
@@ -74,5 +75,32 @@ public interface UserService {
      * @return
      */
     int addUserPoints(String username,Integer pint);
+    /**
+     * 根据昵称查询用户
+     *
+     * @param username
+     * @param nickName
+     * @return
+     */
+    User findByNickName(String username, String nickName);
 
+    /**
+     * 修改用户
+     *
+     */
+    void UpdateUser(User user);
+
+    /**
+     * 用户密码重置
+     * @param user
+     */
+    Result resetPassword(User user);
+
+    /**
+     * 用户登录状态密码重置
+     * @param user
+     */
+    void resetPasswordLogin(User user);
+
+    User findByName(String username);
 }

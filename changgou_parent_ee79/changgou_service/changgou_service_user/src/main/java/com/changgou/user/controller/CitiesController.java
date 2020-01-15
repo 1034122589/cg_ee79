@@ -1,6 +1,9 @@
 package com.changgou.user.controller;
 
+import com.changgou.user.dao.CitiesMapper;
+import com.changgou.user.dao.ProvincesMapper;
 import com.changgou.user.pojo.Cities;
+import com.changgou.user.pojo.Provinces;
 import com.changgou.user.service.CitiesService;
 import com.github.pagehelper.PageInfo;
 import entity.Result;
@@ -23,7 +26,19 @@ public class CitiesController {
 
     @Autowired
     private CitiesService citiesService;
-
+    @Autowired
+    private ProvincesMapper provincesMapper;
+    @Autowired
+    private CitiesMapper citiesMapper;
+    @GetMapping("/{province}")
+    public List<Cities> findByProvince(@PathVariable String province){
+        Provinces p = new Provinces();
+        p.setProvinceid(province);
+        Provinces province1 = provincesMapper.selectOne(p);
+        Cities city = new Cities();
+        city.setProvinceid(province1.getProvinceid());
+        return citiesMapper.select(city);
+    }
     /***
      * Cities分页条件搜索实现
      * @param cities
@@ -102,17 +117,7 @@ public class CitiesController {
         return new Result(true,StatusCode.OK,"添加成功");
     }
 
-    /***
-     * 根据ID查询Cities数据
-     * @param id
-     * @return
-     */
-    @GetMapping("/{id}")
-    public Result<Cities> findById(@PathVariable String id){
-        //调用CitiesService实现根据主键查询Cities
-        Cities cities = citiesService.findById(id);
-        return new Result<Cities>(true,StatusCode.OK,"查询成功",cities);
-    }
+
 
     /***
      * 查询Cities全部数据

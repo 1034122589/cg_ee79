@@ -8,8 +8,11 @@ import entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +32,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private  TokenDecode tokenDecode;
 
     /***
      * User分页条件搜索实现
@@ -102,7 +107,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @PostMapping
+    @PostMapping("/add")
     public Result add(@RequestBody   User user){
         //调用UserService实现添加User
         userService.add(user);
@@ -125,41 +130,13 @@ public class UserController {
      * 查询User全部数据
      * @return
      */
-    @GetMapping
+    @GetMapping("/all")
     public Result<List<User>> findAll(){
         //调用UserService实现查询所有User
         List<User> list = userService.findAll();
         return new Result<List<User>>(true, StatusCode.OK,"查询成功",list) ;
     }
 
-    @RequestMapping("login")
-    public Result<User> login(String username, String password, HttpServletResponse response){
-        //1、通过用户名查询用户信息
-        User user = userService.findById(username);
-        if (user == null){
-            throw new RuntimeException("用户名不存在！");
-        }
-        //密码是否相同
-        if (!BCrypt.checkpw(password, user.getPassword())) {
-            throw new RuntimeException("密码输入不正确！");
-        }
-
-        //封装令牌信息
-        Map<String, Object> map = new HashMap<>();
-        map.put("role","USER");
-        map.put("flag",true);
-        map.put("user",user);
-        //生成令牌
-        String token = JwtUtil.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(map), null);
-        //1、令牌保存在响应头中
-        response.setHeader("Authorization", token);
-        //2、令牌保存在cookie中
-        Cookie cookie = new Cookie("Authorization", token);
-        cookie.setPath("/");  //设置cookie的生效路径
-        response.addCookie(cookie);
-
-        return new Result<User>(true, StatusCode.OK, "登录成功", user);
-    }
 
     /***
      * 添加用户积分
@@ -175,5 +152,82 @@ public class UserController {
         }else{
             return new Result<User>(false, StatusCode.ERROR, "添加积分失败");
         }
+    }
+    /**
+     * 根据昵称查询用户
+     *
+     * @param nickName
+     * @return
+     */
+    @GetMapping("/nickName/{nickName}")
+    public Result findByNickName(@PathVariable String nickName) {
+        //获取用户名
+        Map<String, String> userMap = TokenDecode.getUserInfo();
+        String username = userMap.get("username");
+        User user = userService.findByNickName(username, nickName);
+        if (user == null) {
+            return new Result<>(true, StatusCode.OK, "", user);
+        } else {
+            return new Result<>(false, StatusCode.OK, "昵称重复", user);
+        }
+    }
+    /**
+     * 更新用户
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping
+    Result UpdateUser(@RequestBody User user) {
+        userService.UpdateUser(user);
+        return new Result(true, StatusCode.OK, "更新成功！");
+    }
+
+    /**
+     * 用户密码重置(非登录状态)
+     * @param user
+     * @return
+     */
+    @PostMapping("/reset")
+    public  Result resetPassword(@RequestBody User user){
+        Result result = userService.resetPassword(user);
+        return  result;
+    }
+
+    /**
+     * 用户密码重置(登录状态)
+     * @param user
+     * @return
+     */
+    @PutMapping("/resetlogin")
+    public  Result resetPasswordLogin(@RequestBody User user){
+        //获取request
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        // 重置密码
+        userService.resetPasswordLogin(user);
+        // 清楚cookie
+        Cookie cookie = new Cookie("Authorization","");
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        response.addCookie(cookie);
+        // 获取来源地址
+        String referer = request.getHeader("referer");
+
+        return new Result(true, StatusCode.OK, "重置成功,3秒之后跳转到登录界面！",referer);
+    }
+    /**
+     * 查询单个用户信息
+     *
+     * @return
+     */
+    @GetMapping
+    public Result findOne() {
+        //获取用户名
+        Map<String, String> userMap = TokenDecode.getUserInfo();
+        String username = userMap.get("username");
+        User users = userService.findByName(username);
+        return new Result<>(true, StatusCode.OK, "查询成功", users);
+
     }
 }

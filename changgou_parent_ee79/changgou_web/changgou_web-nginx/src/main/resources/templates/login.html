@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 	<title>青橙，欢迎登录</title>
-	<link rel="icon" href="/img/favicon.ico">
+	<link rel="icon" href="img/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="http://resources.changgou.com/css/all.css" />
-    <link rel="stylesheet" type="text/css" href="http://resources.changgou.com/css/pages-login.css" />
+    <link rel="stylesheet" type="text/css" href="css/all.css" />
+    <link rel="stylesheet" type="text/css" href="css/pages-login.css" />
+
+	<script src="js/vue.js"></script>
+	<script src="js/axios.js"></script>
+	<script src="js/getParameter.js"></script>
+
 </head>
 
 <body>
@@ -91,34 +96,36 @@
 					<div class="tab-content tab-wraped">
 						<div id="index" class="tab-pane ">
 							<p>二维码登录，暂为官网二维码</p>
-							<img src="http://resources.changgou.com/img/wx_cz.jpg" />
+							<img src="img/wx_cz.jpg" />
 						</div>
 						<div id="profile" class="tab-pane active">
 							<form class="sui-form">
 								<div class="input-prepend"><span class="add-on loginname"></span>
-									<input id="inputName" type="text" placeholder="邮箱/用户名/手机号" class="span2 input-xfat">
+									<input id="inputName" v-model="username" type="text" placeholder="邮箱/用户名/手机号" class="span2 input-xfat">
 								</div>
 								<div class="input-prepend"><span class="add-on loginpwd"></span>
-									<input id="inputPassword" type="password" placeholder="请输入密码" class="span2 input-xfat">
+									<input id="inputPassword" v-model="password" type="password" placeholder="请输入密码" class="span2 input-xfat">
 								</div>
 								<div class="setting">
 									<label class="checkbox inline">
 										<input name="m1" type="checkbox" value="2" checked="">
 										自动登录
 									</label>
-									<span class="forget">忘记密码？</span>
+									<span class="forget"><a href="password_find.html">忘记密码？</a> </span>
 								</div>
+								<div style="color: red;text-align: center;">{{msg}}</div>
+
 								<div class="logined">
-									<a class="sui-btn btn-block btn-xlarge btn-danger" href="home.html" target="_blank">登&nbsp;&nbsp;录</a>
+									<a class="sui-btn btn-block btn-xlarge btn-danger" href="javascript:void(0)" @click="login()" >登&nbsp;&nbsp;录</a>
 								</div>
 							</form>
 							<div class="otherlogin">
 								<div class="types">
 									<ul>
-										<li><img src="http://resources.changgou.com/img/qq.png" width="35px" height="35px" /></li>
-										<li><img src="http://resources.changgou.com/img/sina.png" /></li>
-										<li><img src="http://resources.changgou.com/img/ali.png" /></li>
-										<li><img src="http://resources.changgou.com/img/weixin.png" /></li>
+										<li><img src="img/qq.png" width="35px" height="35px" /></li>
+										<li><img src="img/sina.png" /></li>
+										<li><img src="img/ali.png" /></li>
+										<li><img src="img/weixin.png" /></li>
 									</ul>
 								</div>
 								<span class="register"><a href="register.html" target="_blank">立即注册</a></span>
@@ -159,6 +166,48 @@
 		document.getElementById('tabSuiForm').className = "";
 		document.getElementById('tabOtherLogin').className = "active";
 	}
+</script>
+	<!--模板与javascript整合需要使用th:inline-->
+<script type="text/javascript"  th:inline="javascript">
+	var from = getParameter("from");
+	var app = new Vue({
+		el:"#profile",//绑定页面的id
+		data:{  //页面变量声明
+			username:"",
+			password:"",
+			msg:"",  //登录消息
+			 //跳转的地址
+		},
+		methods:{  //页面逻辑包装
+			login:function () {
+				this.msg = "正在登录...";
+				if(this.username == '' || this.password == ''){
+					alert("请输入用户名与密码！");
+					this.msg = "";
+					return;
+				}
+				//发起异步请求登录
+				axios.post("/api/my/login?username=" + this.username + "&password=" + this.password)
+						.then(function (response) {
+							//登录成功
+							if(response.data.flag){
+								app.msg = "登录成功，3秒后跳转...";
+								var i = 3;
+								setInterval(function () {
+									app.msg = "登录成功，"+i+"秒后跳转...";
+									i--;
+								}, 1000);
+								setTimeout(function () {
+									window.location.href = from;
+								}, 3000);
+							}else{
+								app.msg = "登录失败";
+							}
+				});
+			}
+		},
+
+	});
 </script>
 </body>
 </html>

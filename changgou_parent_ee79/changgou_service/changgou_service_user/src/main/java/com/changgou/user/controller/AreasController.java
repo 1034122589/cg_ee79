@@ -1,6 +1,9 @@
 package com.changgou.user.controller;
 
+import com.changgou.user.dao.AreasMapper;
+import com.changgou.user.dao.CitiesMapper;
 import com.changgou.user.pojo.Areas;
+import com.changgou.user.pojo.Cities;
 import com.changgou.user.service.AreasService;
 import com.github.pagehelper.PageInfo;
 import entity.Result;
@@ -23,7 +26,10 @@ public class AreasController {
 
     @Autowired
     private AreasService areasService;
-
+     @Autowired
+     private AreasMapper areasMapper;
+     @Autowired
+     private CitiesMapper citiesMapper;
     /***
      * Areas分页条件搜索实现
      * @param areas
@@ -102,17 +108,7 @@ public class AreasController {
         return new Result(true,StatusCode.OK,"添加成功");
     }
 
-    /***
-     * 根据ID查询Areas数据
-     * @param id
-     * @return
-     */
-    @GetMapping("/{id}")
-    public Result<Areas> findById(@PathVariable String id){
-        //调用AreasService实现根据主键查询Areas
-        Areas areas = areasService.findById(id);
-        return new Result<Areas>(true,StatusCode.OK,"查询成功",areas);
-    }
+
 
     /***
      * 查询Areas全部数据
@@ -123,5 +119,14 @@ public class AreasController {
         //调用AreasService实现查询所有Areas
         List<Areas> list = areasService.findAll();
         return new Result<List<Areas>>(true, StatusCode.OK,"查询成功",list) ;
+    }
+    @GetMapping("/{city}")
+    public List<Areas> findByCity(@PathVariable String city){
+        Cities city1 = new Cities();
+        city1.setCityid(city);
+        Cities c = citiesMapper.selectOne(city1);
+        Areas areas = new Areas();
+        areas.setCityid(c.getCityid());
+        return areasMapper.select(areas);
     }
 }

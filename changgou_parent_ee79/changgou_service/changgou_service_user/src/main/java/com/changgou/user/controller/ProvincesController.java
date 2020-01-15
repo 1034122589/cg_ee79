@@ -1,5 +1,6 @@
 package com.changgou.user.controller;
 
+import com.changgou.user.dao.ProvincesMapper;
 import com.changgou.user.pojo.Provinces;
 import com.changgou.user.service.ProvincesService;
 import com.github.pagehelper.PageInfo;
@@ -23,6 +24,8 @@ public class ProvincesController {
 
     @Autowired
     private ProvincesService provincesService;
+    @Autowired
+    ProvincesMapper provincesMapper;
 
     /***
      * Provinces分页条件搜索实现
@@ -119,9 +122,7 @@ public class ProvincesController {
      * @return
      */
     @GetMapping
-    public Result<List<Provinces>> findAll(){
-        //调用ProvincesService实现查询所有Provinces
-        List<Provinces> list = provincesService.findAll();
-        return new Result<List<Provinces>>(true, StatusCode.OK,"查询成功",list) ;
+    public List<Provinces> findAll(){
+        return provincesMapper.selectAll();
     }
 }

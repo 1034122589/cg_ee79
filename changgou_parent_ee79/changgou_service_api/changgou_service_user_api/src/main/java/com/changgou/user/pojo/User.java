@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /****
@@ -31,7 +32,7 @@ public class User implements Serializable{
 	private Date created;//创建时间
 
     @Column(name = "updated")
-	private Date updated;//修改时间
+	private LocalDateTime updated;//修改时间
 
     @Column(name = "source_type")
 	private String sourceType;//会员来源：1:PC，2：H5，3：Android，4：IOS
@@ -122,12 +123,12 @@ public void setCreated(Date created) {
 		this.created = created;
 		}
 //get方法
-public Date getUpdated() {
+public LocalDateTime getUpdated() {
 		return updated;
 		}
 
 //set方法
-public void setUpdated(Date updated) {
+public void setUpdated(LocalDateTime updated) {
 		this.updated = updated;
 		}
 //get方法

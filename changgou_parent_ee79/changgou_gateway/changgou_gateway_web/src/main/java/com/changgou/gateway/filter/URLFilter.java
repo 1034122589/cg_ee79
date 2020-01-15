@@ -1,29 +1,29 @@
 package com.changgou.gateway.filter;
 
 /**
- * 用户识别不需要登录的Url地址
- * @author Steven
- * @description com.changgou.filter
+ * 路径过滤
  */
 public class URLFilter {
-    //不需要登录的url
-    private static final String[] ignore = {
-            "/api/user/login",
-            "/api/user/add"
-    };
 
     /**
-     * 识别传入的uri是否要权限校验
-     * @param uri 当前传入的uri
-     * @return true需要 | false不需要
+     * 购物车订单微服务都需要用户登录，必须携带令牌，所以所有路径都过滤,订单微服务需要过滤的地址
      */
-    public static boolean hasAuthorize(String uri){
-        for (String ig : ignore) {
-            //如果配置到不需要校验地址
-            if (uri.startsWith(ig)) {
-                return true;
+    public static String orderFilterPath = "/user/login";
+
+    /**
+     * 检查路径是否需要权限校验
+     *
+     * @param uri
+     * @return true:需要校验 false:不需校验
+     */
+    public static boolean needNoAuthorize(String uri) {
+        String[] urls = orderFilterPath.replace("**", "").split(",");
+        for (String url : urls) {
+            if (uri.startsWith(url)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
+
 }

@@ -8,8 +8,43 @@
 	<title>我的账户</title>
 	<link rel="icon" href="/img/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="../static/css/all.css" />
-    <link rel="stylesheet" type="text/css" href="../static/css/pages-home.css" />
+    <link rel="stylesheet" type="text/css" href="css/all.css" />
+    <link rel="stylesheet" type="text/css" href="css/pages-home.css" />
+	<script src="js/vue.js"></script>
+	<script src="js/axios.js"></script>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="elementui/index.css">
+	<script src="elementui/index.js"></script>
+	<script src="js/mobile.js"></script>
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="js/common.js"></script>
+	<style>
+		.avatar-uploader .el-upload {
+			border: 1px dashed #d9d9d9;
+			border-radius: 6px;
+			cursor: pointer;
+			position: relative;
+			overflow: hidden;
+		}
+		.avatar-uploader .el-upload:hover {
+			border-color: #409EFF;
+		}
+		.avatar-uploader-icon {
+			font-size: 28px;
+			color: #8c939d;
+			width: 178px;
+			height: 178px;
+			line-height: 178px;
+			text-align: center;
+		}
+		.avatar {
+			width: 178px;
+			height: 178px;
+			display: block;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -36,7 +71,7 @@
 							<li class="f-item"><span>关注青橙</span></li>
 							<li class="f-item"><span><a href="cooperation.html" target="_blank">合作招商</a></span></li>
 							<li class="f-item"><span><a href="shoplogin.html" target="_blank">商家后台</a></span></li>				
-							<li class="f-item"><span>网站导航</li>
+							<li class="f-item"><span>网站导航</span></li>
 						</ul>
 					</div>
 					
@@ -72,7 +107,7 @@
 
 	<!--header-->
 	<div id="account">
-		<div class="py-container">
+		<div class="py-container"  id="app">
 			<div class="yui3-g home">
 				<!--左侧列表-->
 				<div class="yui3-u-1-6 list">
@@ -117,8 +152,10 @@
 					</dl>
 					<dl>
 						<dt><i>·</i> 设置</dt>
-						<dd>个人信息 </dd>
+						<dd><a href="#person" @click="handleCreate()">个人信息</a> </dd>
 						<dd><a href="addressList.html" target="_blank">收货地址</a> </dd>
+						<dd><a href="#modify_password"  @click="modifypassword()">修改密码</a> </dd>
+
 					</dl>
 				</div>
 				<!--右侧主内容-->
@@ -126,7 +163,7 @@
 					<div class="aboutme yui3-g">
 						<div class="yui3-u-1-4 set info">
 							<div class="u-pic">
-								<img src="../static/img/photo.png" alt="用户头像" />
+								<img src="img/photo.png" alt="用户头像" />
 							</div>
 							<div class="u-info">
 								<div class="u-name">小蜻蜓</div>
@@ -178,7 +215,7 @@
 							</div>
 						</div>
 						<div class="yui3-u-5-24 ads">
-							<img src="../static/img/account.png" />
+							<img src="img/account.png" />
 						</div>
 					</div>
 					<div class="order">
@@ -199,13 +236,13 @@
 								<div id="myCarousel" data-ride="carousel" data-interval="4000" class="sui-carousel slide">
 									<div class="carousel-inner">
 										<div class="active item">
-											<img src="../static/img/quan.png" />
+											<img src="img/quan.png" />
 										</div>
 										<div class="item">
-											<img src="../static/img/quan.png" />
+											<img src="img/quan.png" />
 										</div>
 										<div class="item">
-											<img src="../static/img/quan.png" />
+											<img src="img/quan.png" />
 										</div>
 									</div>
 									<a href="#myCarousel" data-slide="prev" class="carousel-control left">‹</a>
@@ -216,7 +253,7 @@
 						<div class="yui3-u-1-3 change">
 							<div class="title"><span><strong>积分兑换</strong></span></div>
 							<div class="jifen">
-								<div class="fl"><img src="../static/img/duihuan.png" /></div>
+								<div class="fl"><img src="img/duihuan.png" /></div>
 								<div class="fr">
 									<span>FancyFeast珍致 猫头鹰 精选金枪鱼肉配人工蟹肉条</span><br />
 									<span class="fen"><i>1000</i>积分</span>
@@ -281,7 +318,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike01.png" />
+													<img src="img/_/itemlike01.png" />
 												</div>
 												<div class="attr">
 													<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
@@ -300,7 +337,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike02.png" />
+													<img src="img/_/itemlike02.png" />
 												</div>
 												<div class="attr">
 													<em>Apple苹果iPhone 6s/6s Plus 16G 64G 128G</em>
@@ -319,7 +356,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike03.png" />
+													<img src="img/_/itemlike03.png" />
 												</div>
 												<div class="attr">
 													<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
@@ -338,7 +375,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike04.png" />
+													<img src="img/_/itemlike04.png" />
 												</div>
 												<div class="attr">
 													<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
@@ -357,7 +394,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike01.png" />
+													<img src="img/_/itemlike01.png" />
 												</div>
 												<div class="attr">
 													<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
@@ -376,7 +413,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike02.png" />
+													<img src="img/_/itemlike02.png" />
 												</div>
 												<div class="attr">
 													<em>Apple苹果iPhone 6s/6s Plus 16G 64G 128G</em>
@@ -395,7 +432,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike03.png" />
+													<img src="img/_/itemlike03.png" />
 												</div>
 												<div class="attr">
 													<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
@@ -414,7 +451,7 @@
 										<li class="yui3-u-1-4">
 											<div class="list-wrap">
 												<div class="p-img">
-													<img src="../static/img/_/itemlike04.png" />
+													<img src="img/_/itemlike04.png" />
 												</div>
 												<div class="attr">
 													<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
@@ -440,7 +477,129 @@
 					</div>
 				</div>
 			</div>
+			<!-- 个人信息编辑标签弹层 -->
+			<div class="add-form">
+				<el-dialog title="修改/查看个人信息" :visible.sync="dialogFormVisible4Edit">
+					<el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="真实姓名:" prop="username">
+									<el-input v-model="formData.username"/>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="昵称:" prop="nickName">
+									<el-input @blur="findNickName"  v-model="formData.nickName"/>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="性别" prop="sex">
+									<el-select v-model="formData.sex">
+										<el-option label="男" value="1"></el-option>
+										<el-option label="女" value="2"></el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="QQ:" >
+									<el-input v-model="formData.qq"/>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="出生年月:" prop="birthday">
+									<el-date-picker
+											v-model="formData.birthday"
+											type="datetime"
+											placeholder="选择出生日期"
+											format="yyyy-MM-dd">
+									</el-date-picker>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="24">
+								<el-form-item label="上传/修改图像">
+									<el-upload
+											class="avatar-uploader"
+											action="/api/upload"
+											:auto-upload="autoUpload"
+											name="file"
+											:show-file-list="false"
+											:on-success="handleAvatarSuccess"
+											:before-upload="beforeAvatarUpload">
+										<img v-if="imageUrl" :src="imageUrl" class="avatar">
+										<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+									</el-upload>
+								</el-form-item>
+							</el-col>
+						</el-row>
+
+					</el-form>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+						<el-button type="primary" @click="handleEdit()">修改</el-button>
+					</div>
+				</el-dialog>
+			</div>
+			<!-- 修改密码标签弹层 -->
+			<div class="add-form">
+				<el-dialog title="重置密码" :visible.sync="dialogFormVisible4Editpwd">
+					<el-form ref="pwdEditForm" :model="pwdformData" :rules="pwdrules" label-position="right" label-width="100px">
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="用户名:" >
+									<el-input v-model="pwdformData.username" :disabled="true"/>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="手机号:" >
+									<el-input v-model="pwdformData.phone" :disabled="true"/>
+								</el-form-item>
+								<input id="validateCodeButton" @click="sendValidateCode()"   type="button" style="font-size: 12px" value="获取验证码"><br>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="验证码:"  prop="code">
+									<el-input v-model="pwdformData.code" />
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="请输入重置密码:" prop="password" >
+									<el-input type="password" v-model="pwdformData.password" />
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="请确认密码:" prop="checkpwd" >
+									<el-input type="password" v-model="pwdformData.checkpwd" />
+								</el-form-item>
+							</el-col>
+						</el-row>
+
+
+					</el-form>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="dialogFormVisible4Editpwd = false">取消</el-button>
+						<el-button type="primary" @click="handlePwdEdit()">修改</el-button>
+					</div>
+				</el-dialog>
+			</div>
 		</div>
+
 	</div>
 	<!-- 底部栏位 -->
 	<!--页面底部-->
@@ -551,7 +710,7 @@
 					</div>
 					<div class="yui3-u-1-6">
 						<h4>帮助中心</h4>
-						<img src="../static/img/wx_cz.jpg">
+						<img src="img/wx_cz.jpg">
 					</div>
 				</div>
 			</div>
@@ -577,6 +736,180 @@
 <!--页面底部END-->
 
 
+
 </body>
 
 </html>
+<script type="text/javascript">
+	var cookie = cookie.getCookie("Authorization");
+	new Vue({
+		el:"#app",
+		data:{
+			autoUpload:true,//自动上传
+			imageUrl:null,//模型数据，用于上传图片完成后图片预览
+			dialogFormVisible4Edit:false,
+			dialogFormVisible4Editpwd:false,
+			pwdformData:{
+				code:''
+			},
+			formData: {
+				birthday: ''
+			},//表单数据
+
+			rules: {//校验规则
+				username: [{ required: true, message: '真实姓名为必填项', trigger: 'blur' }],
+				nickName: [{ required: true, message: '昵称为必填项', trigger: 'blur' }],
+				sex: [{ required: true, message: '性别为必填项', trigger: 'blur' }],
+				birthday: [{ required: true, message: '出生日期为必填项', trigger: 'blur' }],
+			},
+			pwdrules:{
+				code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+				password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+				checkpwd: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
+			},
+			flag: true
+		},
+		methods: {
+			handleAvatarSuccess(res, file) {
+				this.imageUrl = res.data;
+				this.$message({
+					message: res.message,
+					type: res.flag ? 'success' : 'error'
+				});
+				//设置模型数据（图片名称），后续提交ajax请求时会提交到后台最终保存到数据库
+				this.formData.headPic = res.data;
+			},
+			beforeAvatarUpload(file) {
+				const isJPG = file.type === 'image/jpeg';
+				const isLt2M = file.size / 1024 / 1024 < 2;
+
+				if (!isJPG) {
+					this.$message.error('上传头像图片只能是 JPG 格式!');
+				}
+				if (!isLt2M) {
+					this.$message.error('上传头像图片大小不能超过 2MB!');
+				}
+				return isJPG && isLt2M;
+			},
+
+			// 弹出添加窗口
+			handleCreate() {
+				this.formData = {};
+				this.flag = true;
+				axios.get("/api/user").then((response) => {
+					if (response.data.flag) {
+						this.dialogFormVisible4Edit = true;
+						this.formData = response.data.data;
+						this.imageUrl = this.formData.headPic;
+
+					}
+
+				})
+
+			},
+			// 用户信息编辑
+			handleEdit() {
+				this.$refs['dataEditForm'].validate((valid) => {
+					if (valid) {
+
+						if (this.flag) {
+							axios.post("/api/user", this.formData).then((response) => {
+								this.dialogFormVisible4Edit = false;
+								if (response.data.flag) {
+									this.$message({
+										message: response.data.message,
+										type: 'success'
+									});
+								} else {
+									this.$message.error("更新失败");
+								}
+
+							})
+						} else {
+							this.$message.error("昵称重复");
+						}
+					}
+				})
+			},
+			findNickName() {
+				axios.get("/api/user/nickName/" + this.formData.nickName).then((response) => {
+					if (!response.data.flag) {
+						this.$message.error("昵称重复");
+						this.flag = false;
+					} else {
+						this.flag = true;
+					}
+
+				})
+			},
+			// 回显数据
+			modifypassword() {
+				axios.get("/api/user/").then((response) => {
+					if (response.data.flag) {
+						this.dialogFormVisible4Editpwd = true;
+						this.pwdformData = response.data.data;
+						this.pwdformData.password = '';
+					} else {
+						this.$message.error('网络错误');
+					}
+				})
+			},
+			// 修改密码
+			handlePwdEdit(){
+				this.$refs['pwdEditForm'].validate((valid) => {
+					if (valid) {
+						if (this.pwdformData.password != this.pwdformData.checkpwd) {
+							this.$message.error("俩次输入密码不一致");
+						} else if (this.code != this.pwdformData.code) {
+							this.$message.error("验证码错误");
+						} else {
+							axios.put("/api/user/resetlogin", this.pwdformData).then((response) => {
+								this.dialogFormVisible4Editpwd = false;
+								if (response.data.flag) {
+									this.code = '';
+									this.$message({
+										message: response.data.message,
+										type: 'success'
+									});
+									var url = "login.html?from="+response.data.data;
+									setTimeout("location.href='" + url + "'", 1000);
+								} else {
+									this.$message.error(response.data.message);
+								}
+
+							})
+						}
+					}
+				})
+			},
+			//发送验证码
+			sendValidateCode() {
+				validateCodeButton = $("#validateCodeButton")[0];
+				clock = window.setInterval(doLoop, 1000); //一秒执行一次
+				this.verificationCode();
+			},
+			// 生成验证码
+			verificationCode() {
+				var code = "";
+
+				for (var i = 0; i < 6; i++) {
+
+					var radom = Math.floor(Math.random() * 10);
+
+					code += radom;
+
+				}
+				this.code = code;
+				alert("验证码是" + code);
+			},
+		},
+		created(){
+			if(cookie==null || cookie==''){
+				window.location.href="/login.html?from=http://192.168.45.56/home.html";
+			}
+		}
+
+
+
+	})
+</script>

@@ -1,69 +1,35 @@
 package com.changgou.user.service;
 
+
+
 import com.changgou.user.pojo.Address;
-import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
-/****
- * @Author:sz.itheima
- * @Description:Address业务层接口
- * @Date 2019/6/14 0:16
- *****/
 public interface AddressService {
-
     /***
-     * Address多条件分页查询
-     * @param address
-     * @param page
-     * @param size
+     * 收件地址查询
+     * @param username
      * @return
      */
-    PageInfo<Address> findPage(Address address, int page, int size);
+    List<Address> list(String username);
 
-    /***
-     * Address分页查询
-     * @param page
-     * @param size
-     * @return
-     */
-    PageInfo<Address> findPage(int page, int size);
-
-    /***
-     * Address多条件搜索方法
-     * @param address
-     * @return
-     */
-    List<Address> findList(Address address);
-
-    /***
-     * 删除Address
-     * @param id
-     */
-    void delete(Integer id);
-
-    /***
-     * 修改Address数据
-     * @param address
-     */
-    void update(Address address);
-
-    /***
-     * 新增Address
-     * @param address
+    /**
+     * 添加收件地址
      */
     void add(Address address);
 
     /**
-     * 根据ID查询Address
+     * 查询收件地址
      * @param id
+     *
      * @return
      */
-     Address findById(Integer id);
+    Address findAdderssById(Integer id);
 
-    /***
-     * 查询所有Address
-     * @return
+    /**
+     * 删除收件地址
+     * @param id
      */
-    List<Address> findAll();
+    void deleteAddressById(Integer id);
 }
